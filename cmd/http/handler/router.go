@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"log"
 	"net/http"
 )
 
@@ -17,7 +18,7 @@ func initHandlers() handlers {
 }
 
 func StartServer() {
-
+	log.Println("Initializing the Http Server at localhost:8080")
 	handlers := initHandlers()
 
 	r := chi.NewRouter()
@@ -30,5 +31,5 @@ func StartServer() {
 	r.Route("/v1", func(r chi.Router) {
 		r.Route("/books", handlers.Book.Route)
 	})
-	http.ListenAndServe(":3000", r)
+	http.ListenAndServe(":8080", r)
 }

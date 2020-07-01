@@ -13,13 +13,9 @@ func NewBookHandler() *BookHandler {
 
 func (b *BookHandler) Route(r chi.Router) {
 	r.Get("/hello", b.hello)
-	r.Get("/", b.findAll)
 }
 
-func (b *BookHandler) findAll(w http.ResponseWriter, r *http.Request) {
-	//TODO find all books
-}
-
-func (b *BookHandler) hello(w http.ResponseWriter, r *http.Request) {
-	//TODO hello world
+func (*BookHandler) hello(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Hello World"))
 }
