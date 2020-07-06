@@ -1,3 +1,0 @@
-type BookService interface {
-	Save
-}
