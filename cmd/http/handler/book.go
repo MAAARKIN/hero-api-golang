@@ -2,13 +2,16 @@ package handler
 
 import (
 	"github.com/go-chi/chi"
+	"github.com/maaarkin/hero-api-golang/internal/service"
 	"net/http"
 )
 
-type BookHandler struct{}
+type BookHandler struct {
+	bookService service.BookService
+}
 
-func NewBookHandler() *BookHandler {
-	return &BookHandler{}
+func NewBookHandler(bs service.BookService) *BookHandler {
+	return &BookHandler{bs}
 }
 
 func (b *BookHandler) Route(r chi.Router) {

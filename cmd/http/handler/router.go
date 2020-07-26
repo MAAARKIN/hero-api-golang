@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/maaarkin/hero-api-golang/internal/container"
 	"log"
 	"net/http"
 )
@@ -11,15 +12,15 @@ type handlers struct {
 	Book *BookHandler
 }
 
-func initHandlers() handlers {
+func initHandlers(di container.Container) handlers {
 	return handlers{
-		Book: NewBookHandler(),
+		Book: NewBookHandler(di.Services.BookService),
 	}
 }
 
-func StartServer() {
+func StartServer(di container.Container) {
 	log.Println("Initializing the Http Server at localhost:8080")
-	handlers := initHandlers()
+	handlers := initHandlers(di)
 
 	r := chi.NewRouter()
 
