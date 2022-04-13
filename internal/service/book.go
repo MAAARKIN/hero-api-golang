@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/maaarkin/hero-api-golang/internal/domain/book"
+	"github.com/maaarkin/hero-api-golang/internal/repository"
 )
 
 type BookService interface {
@@ -13,28 +14,42 @@ type BookService interface {
 }
 
 type bookServiceImpl struct {
+	bookStore repository.BookStore
 }
 
-func NewBookService() BookService {
-	return bookServiceImpl{}
+func NewBookService(bookStore repository.BookStore) BookService {
+	return bookServiceImpl{bookStore}
 }
 
-func (bookServiceImpl) Save(book book.Book) (*book.Book, error) {
-	return nil, nil
+func (bs bookServiceImpl) Save(book book.Book) (*book.Book, error) {
+	id, err := bs.bookStore.Create(book)
+
+	if err != nil {
+		return nil, err
+	}
+
+	book.Id = id
+	return &book, nil
 }
 
-func (bookServiceImpl) FindAll() (*[]book.Book, error) {
-	return nil, nil
+func (bs bookServiceImpl) FindAll() (*[]book.Book, error) {
+	return bs.bookStore.GetAll()
 }
 
-func (bookServiceImpl) FindById(id uint64) (*book.Book, error) {
-	return nil, nil
+func (bs bookServiceImpl) FindById(id uint64) (*book.Book, error) {
+	return bs.bookStore.Get(id)
 }
 
-func (bookServiceImpl) Delete(id uint64) error {
-	return nil
+func (bs bookServiceImpl) Delete(id uint64) error {
+	return bs.bookStore.Delete(id)
 }
 
-func (bookServiceImpl) Update(book book.Book) error {
+func (bs bookServiceImpl) Update(book book.Book) error {
+	_, err := bs.bookStore.Update(book.Id, book)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

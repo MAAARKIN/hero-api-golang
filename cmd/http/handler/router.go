@@ -1,11 +1,12 @@
 package handler
 
 import (
+	"log"
+	"net/http"
+
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/maaarkin/hero-api-golang/internal/container"
-	"log"
-	"net/http"
 )
 
 type handlers struct {

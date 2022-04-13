@@ -1,6 +1,7 @@
 package container
 
 import (
+	"github.com/maaarkin/hero-api-golang/internal/repository"
 	"github.com/maaarkin/hero-api-golang/internal/service"
 )
 
@@ -17,8 +18,11 @@ type Services struct {
 // the necessary structs/functions that we need to build our project.
 func Inject() Container {
 
+	//stores
+	bookStore := repository.NewBookStoreInMemory()
+
 	//init services
-	bs := service.NewBookService()
+	bs := service.NewBookService(bookStore)
 
 	services := Services{
 		BookService: bs,
