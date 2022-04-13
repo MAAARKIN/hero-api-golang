@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/maaarkin/hero-api-golang/cmd/http/helper"
 	"github.com/maaarkin/hero-api-golang/internal/service"
 )
 
@@ -28,38 +28,12 @@ func (*BookHandler) hello(w http.ResponseWriter, r *http.Request) {
 
 func (h *BookHandler) getAll(w http.ResponseWriter, r *http.Request) {
 	if results, err := h.bookService.FindAll(); err != nil {
-		addDefaultHeaders(w)
-		writeData(
-			w,
-			map[string]interface{}{
-				"Status":      http.StatusInternalServerError,
-				"Description": "Internal error, please report to admin",
-			},
-		)
+		helper.HandleError(w, err)
 	} else {
 		if results != nil && len(*results) > 0 {
-			addDefaultHeaders(w)
-			w.WriteHeader(http.StatusOK)
-			writeData(w, results)
+			helper.JsonResponse(w, results, http.StatusOK)
 		} else {
-			addDefaultHeaders(w)
-			w.WriteHeader(http.StatusNoContent)
-		}
-	}
-}
-
-func addDefaultHeaders(w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-}
-
-func writeData(w http.ResponseWriter, data interface{}) {
-	if bytes, e := json.Marshal(data); e != nil {
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-	} else {
-		if _, e := w.Write(bytes); e != nil {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			helper.NoContent(w)
 		}
 	}
 }
