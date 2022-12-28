@@ -1,12 +1,21 @@
 package helper
 
 import (
+	"errors"
 	"net/http"
 )
 
 var (
 	errorHandlerMap = make(map[error]int)
+
+	ErrDecodeJson = errors.New("error decoding json")
 )
+
+// register how to deal with errors here to HTTP layer
+func init() {
+	errorHandlerMap[ErrDecodeJson] = http.StatusBadRequest
+
+}
 
 type HttpError struct {
 	Status      int      `json:"-"`

@@ -32,6 +32,11 @@ func JsonResponse(w http.ResponseWriter, data interface{}, httpStatus int) {
 	writeData(w, data)
 }
 
+func Response(w http.ResponseWriter, status int) {
+	addDefaultHeaders(w)
+	w.WriteHeader(status)
+}
+
 func HandleError(w http.ResponseWriter, err error) {
 	addDefaultHeaders(w)
 	httpError := DealWith(err)
