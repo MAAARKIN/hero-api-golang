@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/maaarkin/hero-api-golang/cmd/http/helper"
+	"github.com/maaarkin/hero-api-golang/cmd/http/presenter"
 	"github.com/maaarkin/hero-api-golang/internal/service"
 )
 
@@ -19,6 +20,7 @@ func NewBookHandler(bs service.BookService) *BookHandler {
 func (b *BookHandler) Route(r chi.Router) {
 	r.Get("/hello", b.hello)
 	r.Get("/", b.getAll)
+	r.Post("/", b.create)
 }
 
 func (*BookHandler) hello(w http.ResponseWriter, r *http.Request) {
@@ -35,5 +37,19 @@ func (h *BookHandler) getAll(w http.ResponseWriter, r *http.Request) {
 		} else {
 			helper.NoContent(w)
 		}
+	}
+}
+
+func (h *BookHandler) create(w http.ResponseWriter, r *http.Request) {
+	dto := presenter.BookPersist{}
+	if err := helper.BindJson(r, &dto); err != nil {
+		helper.HandleError(w, err)
+		return
+	}
+
+	if _, err := h.bookService.Save(dto.ToDomain()); err != nil {
+		helper.HandleError(w, err)
+	} else {
+		helper.Response(w, http.StatusCreated)
 	}
 }
