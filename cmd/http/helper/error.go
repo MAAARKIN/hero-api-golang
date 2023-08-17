@@ -18,7 +18,6 @@ var (
 // register how to deal with errors here to HTTP layer
 func init() {
 	errorHandlerMap[ErrDecodeJson] = http.StatusBadRequest
-	errorHandlerMap[ErrJsonValidation] = http.StatusBadRequest
 }
 
 type HttpError struct {
